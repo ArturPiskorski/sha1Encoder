@@ -5,22 +5,10 @@
     <script src="https://thunkable.github.io/webviewer-extension/thunkableWebviewerExtension.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.4.0/sha1.js"></script>
     <script>
-      function handleRequest(event) {
-        if (event.data) {
-          var hashedString = sha1(event.data);
-          ThunkableWebviewerExtension.postMessage(hashedString, "*");
-        }
-      }
-
-      ThunkableWebviewerExtension.receiveMessage(function(receivedData) {
+         ThunkableWebviewerExtension.receiveMessage(function(receivedData) {
       var response = "Hello, World!";
          ThunkableWebviewerExtension.postMessage(response);
 });
-      function sha1(message) {
-        var shaObj = new jsSHA("SHA-1", "TEXT");
-        shaObj.update(message);
-        return shaObj.getHash("HEX");
-      }
     </script>
   </head>
   <body></body>
