@@ -7,7 +7,7 @@
     <script>
       ThunkableWebviewerExtension.receiveMessage(function(receivedData) {
         var hashedString = sha1(receivedData);
-        ThunkableWebviewerExtension.postMessage(hashedString);
+        ThunkableWebviewerExtension.postMessage("asd");
       });
 
       function sha1(message) {
