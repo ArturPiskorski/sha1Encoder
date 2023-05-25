@@ -7,7 +7,7 @@
       function handleRequest(event) {
         if (event.data) {
           var hashedString = sha1(event.data);
-          window.parent.postMessage("hh", "*");
+          window.parent.postMessage(hashedString, "*");
         }
       }
 
