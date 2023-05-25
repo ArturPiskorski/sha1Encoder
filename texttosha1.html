@@ -12,8 +12,10 @@
         }
       }
 
-      ThunkableWebviewerExtension.addEventListener("message", handleRequest);
-      
+      ThunkableWebviewerExtension.receiveMessage(function(receivedData) {
+      var response = "Hello, World!";
+         ThunkableWebviewerExtension.postMessage(response);
+});
       function sha1(message) {
         var shaObj = new jsSHA("SHA-1", "TEXT");
         shaObj.update(message);
