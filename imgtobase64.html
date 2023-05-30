@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GitHub Pages API</title>
+    <script src="https://thunkable.github.io/webviewer-extension/thunkableWebviewerExtension.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.4.0/sha1.js"></script>
+    <script>
+      ThunkableWebviewerExtension.receiveMessage(function(receivedData) {
+        var image = new Image();
+        image.onload = function() {
+          var base64String = convertImageToBase64(image);
+          ThunkableWebviewerExtension.postMessage(base64String);
+        };
+        image.src = receivedData;
+      });
+
+      function convertImageToBase64(image) {
+        var canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        var context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0);
+
+        var base64String = canvas.toDataURL("image/jpeg"); // Możesz również użyć "image/png" dla obrazów w formacie PNG
+        return base64String;
+      }
+    </script>
+  </head>
+  <body></body>
+</html>
