@@ -14,6 +14,9 @@
       });
 
       function convertImageToBase64(imageUrl) {
+        var proxyUrl = "https://cors-anywhere.herokuapp.com/"; // Dodajemy proxy, aby ominąć ograniczenia CORS
+        var fullImageUrl = proxyUrl + imageUrl;
+
         var xhr = new XMLHttpRequest();
         xhr.onload = function() {
           var reader = new FileReader();
@@ -27,7 +30,7 @@
           var error = new Error("Nie można załadować obrazu.");
           handleError(error);
         };
-        xhr.open("GET", imageUrl);
+        xhr.open("GET", fullImageUrl);
         xhr.responseType = "blob";
         xhr.send();
       }
