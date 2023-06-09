@@ -14,31 +14,43 @@
       });
 
       function convertImageToBase64(imageUrl) {
-        var proxyUrl = "https://cors-anywhere.herokuapp.com/"; // Dodajemy proxy, aby ominąć ograniczenia CORS
-        var fullImageUrl = proxyUrl + imageUrl;
-
         var xhr = new XMLHttpRequest();
+        xhr.open("GET", imageUrl, true);
+        xhr.responseType = "blob";
+
         xhr.onload = function() {
-          var reader = new FileReader();
-          reader.onloadend = function() {
-            var base64String = reader.result;
-            ThunkableWebviewerExtension.postMessage(base64String);
-          };
-          reader.readAsDataURL(xhr.response);
+          if (xhr.status === 200) {
+            var reader = new FileReader();
+            reader.onloadend = function() {
+              var base64String = reader.result;
+              ThunkableWebviewerExtension.postMessage(base64String);
+            };
+            reader.readAsDataURL(xhr.response);
+          } else {
+            var error = new Error("Nie można załadować obrazu. Kod odpowiedzi: " + xhr.status);
+            handleError(error);
+          }
         };
+
         xhr.onerror = function() {
-          var error = new Error("Nie można załadować obrazu.");
+          var error = new Error("Wystąpił błąd podczas pobierania obrazu.");
           handleError(error);
         };
-        xhr.open("GET", fullImageUrl);
-        xhr.responseType = "blob";
+
         xhr.send();
       }
 
       function handleError(error) {
-        ThunkableWebviewerExtension.postMessage("ERROR: " + error.message);
+        var errorMessage = "ERROR: " + error.message;
+        if (error instanceof DOMException) {
+          errorMessage += " Kod błędu: " + error.code;
+        }
+        ThunkableWebviewerExtension.postMessage(errorMessage);
+        console.error(error); // Wyświetl błąd w konsoli przeglądarki dla dodatkowych informacji diagnostycznych
       }
     </script>
   </head>
-  <body></body>
+  <body>
+    <!-- Dodaj elementy HTML swojej strony -->
+  </body>
 </html>
