@@ -14,43 +14,30 @@
       });
 
       function convertImageToBase64(imageUrl) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", imageUrl, true);
-        xhr.responseType = "blob";
+        var image = new Image();
+        image.crossOrigin = "Anonymous";
+        image.onload = function() {
+          var canvas = document.createElement("canvas");
+          canvas.width = image.width;
+          canvas.height = image.height;
 
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            var reader = new FileReader();
-            reader.onloadend = function() {
-              var base64String = reader.result;
-              ThunkableWebviewerExtension.postMessage(base64String);
-            };
-            reader.readAsDataURL(xhr.response);
-          } else {
-            var error = new Error("Nie można załadować obrazu. Kod odpowiedzi: " + xhr.status);
-            handleError(error);
-          }
+          var context = canvas.getContext("2d");
+          context.drawImage(image, 0, 0);
+
+          var base64String = canvas.toDataURL("image/jpeg"); // Możesz również użyć "image/png" dla obrazów w formacie PNG
+          ThunkableWebviewerExtension.postMessage(base64String);
         };
-
-        xhr.onerror = function() {
-          var error = new Error("Wystąpił błąd podczas pobierania obrazu.");
+        image.onerror = function() {
+          var error = new Error("Nie można załadować obrazu.");
           handleError(error);
         };
-
-        xhr.send();
+        image.src = imageUrl;
       }
 
       function handleError(error) {
-        var errorMessage = "ERROR: " + error.message;
-        if (error instanceof DOMException) {
-          errorMessage += " Kod błędu: " + error.code;
-        }
-        ThunkableWebviewerExtension.postMessage(errorMessage);
-        console.error(error); // Wyświetl błąd w konsoli przeglądarki dla dodatkowych informacji diagnostycznych
+        ThunkableWebviewerExtension.postMessage("ERROR: " + error.message);
       }
     </script>
   </head>
-  <body>
-    <!-- Dodaj elementy HTML swojej strony -->
-  </body>
+  <body></body>
 </html>
